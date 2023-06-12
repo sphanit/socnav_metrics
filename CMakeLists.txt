@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(ros_api)
+project(socnav_metrics)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,45 +11,37 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   message_generation
   std_msgs
+  costmap_2d
+  geometry_msgs
+  roscpp
+  tf2_ros
+  tf
+  tf2_eigen
+  nav_msgs
 )
 
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+# Eigen3 FindScript Backward compatibility (ubuntu saucy)
+# Since FindEigen.cmake is deprecated starting from jade.
+if (EXISTS "FindEigen3.cmake")
+  find_package(Eigen3 REQUIRED)
+  set(Eigen_INCLUDE_DIRS ${Eigen3_INCLUDE_DIRS})
+elseif (EXISTS "FindEigen.cmake")
+  find_package(Eigen REQUIRED)
+elseif (EXISTS "FindEigen.cmake")
+  message(WARNING "No findEigen cmake script found. You must provde one of them,
+  e.g. by adding it to ${PROJECT_SOURCE_DIR}/cmake_modules.")
+endif (EXISTS "FindEigen3.cmake")
 
 
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
-
-################################################
-## Declare ROS messages, services and actions ##
-################################################
-
-## To declare and build messages, services or actions from within this
-## package, follow these steps:
-## * Let MSG_DEP_SET be the set of packages whose message types you use in
-##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
-## * In the file package.xml:
-##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
-##     but can be declared for certainty nonetheless:
-##     * add a exec_depend tag for "message_runtime"
-## * In this file (CMakeLists.txt):
-##   * add "message_generation" and every package in MSG_DEP_SET to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
-##   * uncomment the add_*_files sections below as needed
-##     and list every .msg/.srv/.action file to be processed
-##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   MetricData.msg
+   MetricsData.msg
+   HRMetrics.msg
+   AgentsData.msg
+   Human.msg
+   Robot.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -69,7 +61,9 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
+   std_msgs  
+   geometry_msgs
+   # Or other packages containing msgs
  )
 
 ################################################
@@ -102,7 +96,7 @@ add_message_files(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  CATKIN_DEPENDS rospy std_msgs  message_runtime
+  CATKIN_DEPENDS rospy std_msgs  message_runtime costmap_2d geometry_msgs roscpp nav_msgs
 )
 
 ###########
@@ -130,7 +124,7 @@ add_library(${PROJECT_NAME}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(metrics src/metrics_node.cpp)
+add_executable(metrics_node src/metrics_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -140,10 +134,12 @@ add_executable(metrics src/metrics_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(metrics ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(metrics_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(metrics
+target_link_libraries(metrics_node
+  ${PROJECT_NAME}
+  ${EXTERNAL_LIBS}
   ${catkin_LIBRARIES}
 )
 
