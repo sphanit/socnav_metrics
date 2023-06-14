@@ -1,9 +1,9 @@
 # socnav_metrics
+Metrics Implemented
+Success, human-robot distance, human-robot collision, static map collision
 
 Metrics to implement
-
-Success rate, SPL, Collision, human-robot distance, movement jerk
+SPL, Movement Jerk
 
 What are the assumptions ?
-
 Which packages? What is available?
