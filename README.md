@@ -1,8 +1,8 @@
 # socnav_metrics
-Metrics Implemented
+Metrics Implemented: 
 Success, human-robot distance, human-robot collision, static map collision
 
-Metrics to implement
+Metrics to implement: 
 SPL, Movement Jerk
 
 What are the assumptions ?
