@@ -4,9 +4,10 @@ uint8   EPISODE=1
 
 uint8       type
 string      t_name
-bool        success         #Only valid for episode, otherwise set to -1
 time        time_stamp
+int8        success             #Only valid for episode, otherwise set to -1
 uint32      obs_collisions
-float32     movement_jerk
-float32     spl             #Only valid for episode, otherwise set to -1
+float32     movement_jerk       
+float32     min_movement_jerk   #Only valid for episode, otherwise inf
+float32     spl                 #Only valid for episode, otherwise set to -1
 HRMetrics[] social_metrics

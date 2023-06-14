@@ -1,3 +1,3 @@
-Robot                       robot
-geometry_msgs/PoseStamped   goal
-Human[]                     humans
+int64     eps_id
+Robot     robot
+Human[]   humans

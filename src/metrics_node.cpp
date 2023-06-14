@@ -2,6 +2,6 @@
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "metrics_node");
-  socnav_metrics::Metrics metrics;
+  socnav_metrics::SocialNavROS metrics;
   return 0;
 }
